@@ -1,0 +1,51 @@
+digraph lifecycle {
+  graph [style=filled,color=lightgrey]
+  node [style=filled,color=white];
+
+  subgraph cluster_deployment {
+    label = "Deployment (approximate)";
+    style = filled
+    color = lightblue
+
+    DeploymentAvailable [label=Available, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentAvailable"]
+    DeploymentProgressing [label=Progressing, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentProgressing"]
+    DeploymentReplicaFailure [label=ReplicaFailure, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentReplicaFailure"]
+
+    DeploymentReplicas [label=Replicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
+    DeploymentReadyReplicas [label=ReadyReplicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
+    DeploymentAvailableReplicas [label=AvailableReplicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
+    DeploymentUnavailableReplicas [label=UnavailableReplicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
+
+    DeploymentMinReadySeconds [label=MinReadySeconds, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentSpec"]
+
+    DeploymentProgressing -> DeploymentReplicas
+    DeploymentProgressing -> DeploymentReadyReplicas
+    DeploymentProgressing -> DeploymentAvailableReplicas
+
+    DeploymentAvailable -> DeploymentAvailableReplicas
+    DeploymentAvailable -> DeploymentReplicas
+
+    DeploymentAvailableReplicas -> DeploymentMinReadySeconds
+  }
+
+  subgraph cluster_pods {
+    label = "Pod (approximate)";
+    style = filled
+    color = lightblue
+
+    PodReady [label=Ready, href="https://godoc.org/k8s.io/api/core/v1#PodReady"]
+    PodScheduled [label=Scheduled, href="https://godoc.org/k8s.io/api/core/v1#PodScheduled"]
+    PodInitialized [label=Initialized, href="https://godoc.org/k8s.io/api/core/v1#PodInitialized"]
+    ContainersReady [label=ContainersReady, href="https://godoc.org/k8s.io/api/core/v1#ContainersReady"]
+    ContainerStatus [label=ContainerStatus, href="https://godoc.org/k8s.io/api/core/v1#ContainerStatus"]
+
+    PodReady -> ContainersReady
+    PodReady -> PodInitialized
+    PodInitialized -> PodScheduled
+
+    ContainersReady -> ContainerStatus
+  }
+
+  DeploymentAvailableReplicas -> DeploymentReadyReplicas
+  DeploymentReadyReplicas -> PodReady
+}

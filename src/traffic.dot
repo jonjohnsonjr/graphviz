@@ -1,0 +1,70 @@
+digraph TrafficGraph {
+  KSVC -> Configuration
+  KSVC -> Route
+
+  Revision -> Deployment
+  Revision -> KPA
+
+  KPA -> SKS
+  KPA -> MetricsService
+  KPA -> Deployment [style=dashed]
+
+  Route -> ClusterIngress
+  Route -> PlaceholderService
+
+  ClusterIngress -> VirtualService
+
+  Configuration -> Revision
+
+  SKS -> PublicService
+  SKS -> PublicEndpoints
+  SKS -> PrivateService
+
+  Deployment -> ReplicaSet
+
+  ReplicaSet -> Pod
+
+  Pod -> UserContainer
+  Pod -> QueueProxy
+
+  VirtualService -> IngressGateway [style=dashed]
+
+  PrivateService -> PublicEndpoints [style=dashed]
+
+  // Traffic flow
+  Client -> IngressGateway [style=dotted]
+  IngressGateway -> PlaceholderService [style=dotted]
+  PlaceholderService -> PublicService [style=dotted]
+  PublicService -> PublicEndpoints [style=dotted]
+  PublicEndpoints -> Pod [style=dotted]
+  PublicEndpoints -> Activator [style=dotted]
+  Activator -> Pod [style=dotted]
+  Pod -> QueueProxy [style=dotted]
+  QueueProxy -> UserContainer [style=dotted]
+
+  PrivateService -> Deployment [style=dotted]
+
+  // Probes
+  KPA -> Activator [style=dotted,color=red]
+  Activator -> Pod [style=dotted,color=red]
+  QueueProxy -> UserContainer [style=dotted,color=red]
+
+  // Scrape
+  MetricsService -> Pod [style=dotted,color=green]
+
+  // Kubernetes
+  Deployment [color=blue]
+  ReplicaSet [color=blue]
+  Pod [color=blue]
+  PublicService [color=blue]
+  PublicEndpoints [color=blue]
+  PrivateService [color=blue]
+  MetricsService [color=blue]
+  PlaceholderService [color=blue]
+  QueueProxy [color=blue]
+  UserContainer [color=blue]
+
+  // Istio
+  VirtualService [color=green]
+  IngressGateway [color=green]
+}

@@ -1,0 +1,130 @@
+digraph lifecycle {
+  graph [style=filled,color=lightgrey]
+  node [style=filled,color=white];
+
+  subgraph cluster_service {
+    label = "Service";
+
+    ServiceConditionReady [label=Ready]
+    ServiceConditionConfigurationsReady [label=ConfigurationsReady]
+    ServiceConditionRoutesReady [label=RoutesReady]
+
+    ServiceConditionReady -> ServiceConditionConfigurationsReady
+    ServiceConditionReady -> ServiceConditionRoutesReady
+  }
+
+  subgraph cluster_route {
+    label = "Route";
+
+    RouteConditionReady [label=Ready]
+    RouteConditionAllTrafficAssigned [label=AllTrafficAssigned]
+    RouteConditionIngressReady [label=IngressReady]
+    RouteConditionCertificateProvisioned [label=CertificateProvisioned,style="filled,dashed",fillcolor=white,color=black]
+
+    RouteConditionReady -> RouteConditionAllTrafficAssigned
+    RouteConditionReady -> RouteConditionIngressReady
+  }
+
+  subgraph cluster_configuration {
+    label = "Configuration";
+
+    ConfigurationConditionReady [label=Ready]
+  }
+
+  subgraph cluster_revision {
+    label = "Revision";
+
+    RevisionConditionReady [label=Ready]
+    RevisionConditionResourcesAvailable [label=ResourcesAvailable]
+    RevisionConditionContainerHealthy [label=ContainerHealthy]
+    RevisionConditionActive [label=Active,style="filled,dashed",fillcolor=white,color=black]
+
+    RevisionConditionReady -> RevisionConditionResourcesAvailable
+    RevisionConditionReady -> RevisionConditionContainerHealthy
+  }
+
+  subgraph cluster_ingress {
+    label = "Ingress";
+
+    IngressConditionReady [label=Ready]
+    IngressConditionNetworkConfigured [label=NetworkConfigured]
+    IngressConditionLoadBalancerReady [label=LoadBalancerReady]
+
+    IngressConditionReady -> IngressConditionNetworkConfigured
+    IngressConditionReady -> IngressConditionLoadBalancerReady
+  }
+
+  subgraph cluster_kpa {
+    label = "PodAutoscaler";
+
+    PodAutoscalerConditionReady [label=Ready]
+    PodAutoscalerConditionBootstrap [label=Bootstrap]
+    PodAutoscalerConditionActive [label=Active,style="filled,dashed",fillcolor=white,color=black]
+
+    PodAutoscalerConditionReady -> PodAutoscalerConditionBootstrap
+  }
+
+  subgraph cluster_certificate {
+    label = "Certificate";
+
+    CertificateConditionReady [label=Ready]
+  }
+
+  subgraph cluster_sks {
+    label = "ServerlessService";
+
+    ServerlessServiceConditionReady [label=Ready]
+    ServerlessServiceConditionEndspointsPopulated [label=EndpointsPopulated]
+
+    ServerlessServiceConditionReady -> ServerlessServiceConditionEndspointsPopulated
+  }
+
+  subgraph cluster_pods {
+    label = "Pod (approximate)";
+    style = filled
+    color = lightblue
+
+    PodReady [label=Ready, href="https://godoc.org/k8s.io/api/core/v1#PodReady"]
+    PodScheduled [label=Scheduled, href="https://godoc.org/k8s.io/api/core/v1#PodScheduled"]
+    PodInitialized [label=Initialized, href="https://godoc.org/k8s.io/api/core/v1#PodInitialized"]
+    ContainersReady [label=ContainersReady, href="https://godoc.org/k8s.io/api/core/v1#ContainersReady"]
+    ContainerStatus [label=ContainerStatus, href="https://godoc.org/k8s.io/api/core/v1#ContainerStatus"]
+
+    PodReady -> ContainersReady
+    PodReady -> PodInitialized
+    PodInitialized -> PodScheduled
+
+    ContainersReady -> ContainerStatus
+  }
+
+  subgraph cluster_deployment {
+    label = "Deployment (approximate)";
+    style = filled
+    color = lightblue
+
+    DeploymentAvailable [label=Available, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentAvailable"]
+    DeploymentProgressing [label=Progressing, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentProgressing"]
+    DeploymentReplicaFailure [label=ReplicaFailure, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentReplicaFailure"]
+  }
+
+  ServiceConditionConfigurationsReady -> ConfigurationConditionReady
+  ServiceConditionRoutesReady -> RouteConditionReady
+
+  RouteConditionCertificateProvisioned -> CertificateConditionReady
+  RouteConditionIngressReady -> IngressConditionReady
+
+  ConfigurationConditionReady -> RevisionConditionReady 
+
+  RevisionConditionActive -> PodAutoscalerConditionActive
+
+  PodAutoscalerConditionActive -> ServerlessServiceConditionReady
+
+  PodAutoscalerConditionBootstrap -> PodScheduled
+  PodAutoscalerConditionBootstrap -> ContainerStatus
+
+  RevisionConditionResourcesAvailable -> PodAutoscalerConditionReady
+  RevisionConditionContainerHealthy -> PodAutoscalerConditionReady
+  RevisionConditionResourcesAvailable -> DeploymentProgressing
+
+  DeploymentAvailable -> PodReady
+}
