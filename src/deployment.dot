@@ -1,11 +1,9 @@
-digraph lifecycle {
-  graph [style=filled,color=lightgrey]
-  node [style=filled,color=white];
-
+digraph DeploymentLifecycle {
   subgraph cluster_deployment {
-    label = "Deployment (approximate)";
+    label = "Deployment";
     style = filled
     color = lightblue
+    node [style=filled,color=white];
 
     DeploymentAvailable [label=Available, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentAvailable"]
     DeploymentProgressing [label=Progressing, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentProgressing"]
@@ -25,13 +23,33 @@ digraph lifecycle {
     DeploymentAvailable -> DeploymentAvailableReplicas
     DeploymentAvailable -> DeploymentReplicas
 
-    DeploymentAvailableReplicas -> DeploymentMinReadySeconds
+    DeploymentUnavailableReplicas -> DeploymentReplicas
+    DeploymentUnavailableReplicas -> DeploymentAvailableReplicas
+  }
+
+  subgraph cluster_rs {
+    label = "ReplicaSet";
+    style = filled
+    color = lightblue
+    node [style=filled,color=white];
+
+    ReplicaSetReplicaFailure [label=ReplicaFailure, href="https://godoc.org/k8s.io/api/apps/v1#ReplicaSetReplicaFailure"]
+
+    ReplicaSetReplicas [label=Replicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#ReplicaSetStatus"]
+    ReplicaSetReadyReplicas [label=ReadyReplicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#ReplicaSetStatus"]
+    ReplicaSetAvailableReplicas [label=AvailableReplicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#ReplicaSetStatus"]
+
+    ReplicaSetMinReadySeconds [label=MinReadySeconds, href="https://godoc.org/k8s.io/api/apps/v1#ReplicaSetSpec"]
+
+    ReplicaSetAvailableReplicas -> ReplicaSetMinReadySeconds
+    ReplicaSetAvailableReplicas -> ReplicaSetReadyReplicas
   }
 
   subgraph cluster_pods {
-    label = "Pod (approximate)";
+    label = "Pod";
     style = filled
     color = lightblue
+    node [style=filled,color=white];
 
     PodReady [label=Ready, href="https://godoc.org/k8s.io/api/core/v1#PodReady"]
     PodScheduled [label=Scheduled, href="https://godoc.org/k8s.io/api/core/v1#PodScheduled"]
@@ -46,6 +64,23 @@ digraph lifecycle {
     ContainersReady -> ContainerStatus
   }
 
-  DeploymentAvailableReplicas -> DeploymentReadyReplicas
-  DeploymentReadyReplicas -> PodReady
+  ReplicaSetReplicas -> ClaimPods
+  ReplicaSetReadyReplicas -> ClaimPods
+
+  ReplicaSetReadyReplicas -> PodReady
+
+  DeploymentReplicas -> ReplicaSetReplicas
+  DeploymentReadyReplicas -> ReplicaSetReadyReplicas
+  DeploymentAvailableReplicas -> ReplicaSetAvailableReplicas
+
+  DeploymentReplicaFailure -> ReplicaSetReplicaFailure
+
+  ReplicaSetReplicaFailure -> CreatePod
+  ReplicaSetReplicaFailure -> DeletePod
+
+  ReplicaSetMinReadySeconds -> DeploymentMinReadySeconds [style=dashed]
+
+  CreatePod [label="CreatePod()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L466-L511"]
+  DeletePod [label="DeletePod()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L512-L554"]
+  ClaimPods [label="ClaimPods()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L590-L612"]
 }
