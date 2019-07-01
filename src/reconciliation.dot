@@ -1,6 +1,6 @@
 digraph ReconciliationGraph {
-  KSVC -> Configuration
-  KSVC -> Route
+  Service -> Configuration
+  Service -> Route
 
   Revision -> Deployment
   Revision -> KPA
@@ -16,10 +16,10 @@ digraph ReconciliationGraph {
 
   Certificate -> CertManager
 
-  CertManager -> Secret [style=dashed]
+  CertManager -> Secret
+  Secret -> ClusterIngress [style=dashed]
 
   ClusterIngress -> VirtualService
-  ClusterIngress -> Secret
 
   Configuration -> Revision
 
@@ -70,4 +70,8 @@ digraph ReconciliationGraph {
 
   // CertManager
   CertManager [color=orange]
+
+  // Singleton
+  Activator [shape=circle]
+  Client [shape=circle]
 }

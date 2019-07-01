@@ -1,6 +1,6 @@
 digraph TrafficGraph {
-  KSVC -> Configuration
-  KSVC -> Route
+  Service -> Configuration
+  Service -> Route
 
   Revision -> Deployment
   Revision -> KPA
@@ -49,8 +49,11 @@ digraph TrafficGraph {
   Activator -> Pod [style=dotted,color=red]
   QueueProxy -> UserContainer [style=dotted,color=red]
 
-  // Scrape
+  // Scrape metrics
   MetricsService -> Pod [style=dotted,color=green]
+
+  // Push metrics
+  MetricsService  -> Activator [style=dotted,color=green]
 
   // Kubernetes
   Deployment [color=blue]
@@ -67,4 +70,8 @@ digraph TrafficGraph {
   // Istio
   VirtualService [color=green]
   IngressGateway [color=green]
+
+  // Singleton
+  Activator [shape=circle]
+  Client [shape=circle]
 }
