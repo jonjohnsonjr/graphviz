@@ -5,17 +5,21 @@ digraph DeploymentLifecycle {
     color = lightblue
     node [style=filled,color=white];
 
+    // Conditions
     DeploymentAvailable [label=Available, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentAvailable"]
     DeploymentProgressing [label=Progressing, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentProgressing"]
     DeploymentReplicaFailure [label=ReplicaFailure, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentReplicaFailure"]
 
-    DeploymentReplicas [label=Replicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
-    DeploymentReadyReplicas [label=ReadyReplicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
-    DeploymentAvailableReplicas [label=AvailableReplicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
-    DeploymentUnavailableReplicas [label=UnavailableReplicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
+    // Status
+    DeploymentReplicas [label=Replicas, shape=box, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
+    DeploymentReadyReplicas [label=ReadyReplicas, shape=box, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
+    DeploymentAvailableReplicas [label=AvailableReplicas, shape=box, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
+    DeploymentUnavailableReplicas [label=UnavailableReplicas, shape=box, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#DeploymentStatus"]
 
+    // Spec
     DeploymentMinReadySeconds [label=MinReadySeconds, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentSpec"]
 
+    // Dependencies
     DeploymentProgressing -> DeploymentReplicas
     DeploymentProgressing -> DeploymentReadyReplicas
     DeploymentProgressing -> DeploymentAvailableReplicas
@@ -33,14 +37,18 @@ digraph DeploymentLifecycle {
     color = lightblue
     node [style=filled,color=white];
 
+    // Conditions
     ReplicaSetReplicaFailure [label=ReplicaFailure, href="https://godoc.org/k8s.io/api/apps/v1#ReplicaSetReplicaFailure"]
 
-    ReplicaSetReplicas [label=Replicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#ReplicaSetStatus"]
-    ReplicaSetReadyReplicas [label=ReadyReplicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#ReplicaSetStatus"]
-    ReplicaSetAvailableReplicas [label=AvailableReplicas, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#ReplicaSetStatus"]
+    // Status
+    ReplicaSetReplicas [label=Replicas, shape=box, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#ReplicaSetStatus"]
+    ReplicaSetReadyReplicas [label=ReadyReplicas, shape=box, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#ReplicaSetStatus"]
+    ReplicaSetAvailableReplicas [label=AvailableReplicas, shape=box, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/apps#ReplicaSetStatus"]
 
+    // Spec
     ReplicaSetMinReadySeconds [label=MinReadySeconds, href="https://godoc.org/k8s.io/api/apps/v1#ReplicaSetSpec"]
 
+    // Dependencies
     ReplicaSetAvailableReplicas -> ReplicaSetMinReadySeconds
     ReplicaSetAvailableReplicas -> ReplicaSetReadyReplicas
   }
@@ -51,12 +59,16 @@ digraph DeploymentLifecycle {
     color = lightblue
     node [style=filled,color=white];
 
+    // Conditions
     PodReady [label=Ready, href="https://godoc.org/k8s.io/api/core/v1#PodReady"]
     PodScheduled [label=Scheduled, href="https://godoc.org/k8s.io/api/core/v1#PodScheduled"]
     PodInitialized [label=Initialized, href="https://godoc.org/k8s.io/api/core/v1#PodInitialized"]
     ContainersReady [label=ContainersReady, href="https://godoc.org/k8s.io/api/core/v1#ContainersReady"]
-    ContainerStatus [label=ContainerStatus, href="https://godoc.org/k8s.io/api/core/v1#ContainerStatus"]
 
+    // Status
+    ContainerStatus [label=ContainerStatus, shape=box, href="https://godoc.org/k8s.io/api/core/v1#ContainerStatus"]
+
+    // Dependencies
     PodReady -> ContainersReady
     PodReady -> PodInitialized
     PodInitialized -> PodScheduled
@@ -64,23 +76,25 @@ digraph DeploymentLifecycle {
     ContainersReady -> ContainerStatus
   }
 
+  // External dependencies
+  CreatePod [label="CreatePod()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L466-L511"]
+  DeletePod [label="DeletePod()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L512-L554"]
+  ClaimPods [label="ClaimPods()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L590-L612"]
+
+  // Inter-object dependencies
   ReplicaSetReplicas -> ClaimPods
   ReplicaSetReadyReplicas -> ClaimPods
 
   ReplicaSetReadyReplicas -> PodReady
-
-  DeploymentReplicas -> ReplicaSetReplicas
-  DeploymentReadyReplicas -> ReplicaSetReadyReplicas
-  DeploymentAvailableReplicas -> ReplicaSetAvailableReplicas
-
-  DeploymentReplicaFailure -> ReplicaSetReplicaFailure
 
   ReplicaSetReplicaFailure -> CreatePod
   ReplicaSetReplicaFailure -> DeletePod
 
   ReplicaSetMinReadySeconds -> DeploymentMinReadySeconds [style=dashed]
 
-  CreatePod [label="CreatePod()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L466-L511"]
-  DeletePod [label="DeletePod()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L512-L554"]
-  ClaimPods [label="ClaimPods()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L590-L612"]
+  DeploymentReplicas -> ReplicaSetReplicas
+  DeploymentReadyReplicas -> ReplicaSetReadyReplicas
+  DeploymentAvailableReplicas -> ReplicaSetAvailableReplicas
+
+  DeploymentReplicaFailure -> ReplicaSetReplicaFailure
 }
