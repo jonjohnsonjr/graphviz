@@ -1,0 +1,83 @@
+digraph ReconciliationGraph {
+  Service -> Configuration
+  Service -> Route
+
+  Revision -> Deployment
+  Revision -> KPA
+  Revision -> ImageCache
+
+  KPA -> SKS
+  KPA -> MetricsService
+  KPA -> Deployment [style=dashed]
+
+  Route -> ClusterIngress
+  Route -> PlaceholderService
+  Route -> Certificate
+
+  // Tracking
+  Configuration -> Route [style=dashed]
+  Revision -> Route [style=dashed]
+  Route -> Configuration [style=dashed]
+  Route -> Revision [style=dashed]
+
+  Certificate -> CertManager
+
+  CertManager -> Secret
+  Secret -> ClusterIngress [style=dashed]
+
+  ClusterIngress -> VirtualService
+
+  Configuration -> Revision
+
+  SKS -> PublicService
+  SKS -> PublicEndpoints
+  SKS -> PrivateService
+
+  Deployment -> ReplicaSet
+
+  ReplicaSet -> Pod
+
+  Pod -> UserContainer
+  Pod -> QueueProxy
+
+  VirtualService -> IngressGateway [style=dashed]
+
+  PrivateService -> PublicEndpoints [style=dashed]
+
+  // Traffic flow
+  Client -> IngressGateway [style=dotted]
+  IngressGateway -> PlaceholderService [style=dotted]
+  PlaceholderService -> PublicService [style=dotted]
+  PublicService -> PublicEndpoints [style=dotted]
+  PublicEndpoints -> Pod [style=dotted]
+  PublicEndpoints -> Activator [style=dotted]
+  Activator -> Pod [style=dotted]
+  Pod -> QueueProxy [style=dotted]
+  QueueProxy -> UserContainer [style=dotted]
+
+  PrivateService -> Deployment [style=dotted]
+
+  // Kubernetes
+  Deployment [color=blue]
+  ReplicaSet [color=blue]
+  Pod [color=blue]
+  PublicService [color=blue]
+  PublicEndpoints [color=blue]
+  PrivateService [color=blue]
+  MetricsService [color=blue]
+  PlaceholderService [color=blue]
+  Secret [color=blue]
+  QueueProxy [color=blue]
+  UserContainer [color=blue]
+
+  // Istio
+  VirtualService [color=green]
+  IngressGateway [color=green]
+
+  // CertManager
+  CertManager [color=orange]
+
+  // Singleton
+  Activator [shape=circle]
+  Client [shape=circle]
+}

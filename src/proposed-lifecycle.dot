@@ -65,6 +65,9 @@ digraph lifecycle {
 
     PodAutoscalerConditionReady [label=Ready, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerConditionReady"]
     PodAutoscalerConditionActive [label=Active, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerConditionActive",style="filled,dashed",fillcolor=white,color=black]
+    PodAutoscalerConditionPodsReady [label=PodsReady]
+
+    PodAutoscalerConditionReady -> PodAutoscalerConditionPodsReady 
   }
 
   subgraph cluster_certificate {
@@ -119,11 +122,9 @@ digraph lifecycle {
     DeploymentStatusReady [label=Ready]
     DeploymentStatusProgressing [label=Progressing]
     DeploymentStatusReplicaSetReady [label=ReplicaSetReady]
-    DeploymentStatusPodsReady [label=PodsReady]
 
     DeploymentStatusReady -> DeploymentStatusProgressing
     DeploymentStatusReady -> DeploymentStatusReplicaSetReady
-    DeploymentStatusReady -> DeploymentStatusPodsReady
   }
 
   subgraph cluster_podstatus {
@@ -143,21 +144,20 @@ digraph lifecycle {
   RouteConditionCertificateProvisioned -> CertificateConditionReady
   RouteConditionIngressReady -> IngressConditionReady
 
-  ConfigurationConditionReady -> RevisionConditionReady 
+  ConfigurationConditionReady -> RevisionConditionReady
 
   RevisionConditionDeploymentReady -> DeploymentStatusReady
   RevisionConditionAutoscalerReady -> PodAutoscalerConditionReady
 
   RevisionConditionActive -> PodAutoscalerConditionActive
 
-  PodAutoscalerConditionReady -> ServerlessServiceConditionReady
-  PodAutoscalerConditionActive -> DeploymentStatusReady
+  PodAutoscalerConditionActive -> ServerlessServiceConditionReady
+  PodAutoscalerConditionPodsReady -> PodStatusReady
 
   DeploymentAvailable -> PodReady
 
   DeploymentStatusProgressing -> DeploymentProgressing
   DeploymentStatusReplicaSetReady -> DeploymentReplicaFailure
-  DeploymentStatusPodsReady -> PodStatusReady
 
   PodStatusPodScheduled -> PodScheduled
   PodStatusContainerReady -> ContainerStatus
