@@ -80,6 +80,7 @@ digraph DeploymentLifecycle {
   CreatePod [label="CreatePod()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L466-L511"]
   DeletePod [label="DeletePod()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L512-L554"]
   ClaimPods [label="ClaimPods()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L590-L612"]
+  Probe [label="Probe()", href="https://github.com/kubernetes/kubernetes/blob/619a3985d0d43e0049d795fce223319bd06cbf07/pkg/kubelet/prober/prober.go#L155-L197"]
 
   // Inter-object dependencies
   ReplicaSetReplicas -> ClaimPods
@@ -97,4 +98,6 @@ digraph DeploymentLifecycle {
   DeploymentAvailableReplicas -> ReplicaSetAvailableReplicas
 
   DeploymentReplicaFailure -> ReplicaSetReplicaFailure
+
+  ContainerStatus -> Probe
 }
