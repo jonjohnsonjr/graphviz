@@ -92,10 +92,8 @@ digraph lifecycle {
     style = filled
     color = linen
 
-    MetricConditionReady [label=Ready, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricConditionReady"]
-    MetricConditionActive [label=Active, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricConditionActive"]
-
-    MetricConditionReady -> MetricConditionActive
+    MetricStableWindow [label=StableWindow, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricStableWindow"]
+    MetricPanicWindow [label=PanicWindow, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricPanicWindow"]
   }
 
   subgraph cluster_sks {
@@ -139,6 +137,15 @@ digraph lifecycle {
     DeploymentReplicaFailure [label=ReplicaFailure, href="https://godoc.org/k8s.io/api/apps/v1#DeploymentReplicaFailure"]
   }
 
+  subgraph cluster_endpoints {
+    label = "Endpoints (approximate)";
+    href = "https://godoc.org/k8s.io/api/apps/v1#Endpoints"
+    style = filled
+    color = lightblue
+
+    EndpointsSubsets [label=Subsets, href="https://godoc.org/k8s.io/api/apps/v1#Endpoints.Subsets"]
+  }
+
   ServiceConditionConfigurationsReady -> ConfigurationConditionReady
   ServiceConditionRoutesReady -> RouteConditionReady
 
@@ -148,15 +155,19 @@ digraph lifecycle {
   ConfigurationConditionReady -> RevisionConditionReady
 
   RevisionConditionActive -> PodAutoscalerConditionReady
-
-  PodAutoscalerConditionActive -> ServerlessServiceConditionReady
-  PodAutoscalerConditionActive -> DeciderDesiredScale
-
   RevisionConditionContainerHealthy -> ContainerStatus
   RevisionConditionResourcesAvailable -> ContainerStatus
   RevisionConditionResourcesAvailable -> PodScheduled
   RevisionConditionResourcesAvailable -> DeploymentProgressing
 
+  PodAutoscalerConditionActive -> ServerlessServiceConditionReady
+  PodAutoscalerConditionActive -> DeciderDesiredScale
+  PodAutoscalerConditionActive -> EndpointsSubsets
+
+  DeciderDesiredScale -> MetricStableWindow
+  DeciderDesiredScale -> MetricPanicWindow
+
+  ServerlessServiceConditionEndspointsPopulated -> EndpointsSubsets
   ServerlessServiceMode -> PodAutoscalerConditionActive
   ServerlessServiceMode -> DeciderExcessBurstCapacity
 

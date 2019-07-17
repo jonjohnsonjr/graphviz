@@ -10,6 +10,12 @@ digraph ReconciliationGraph {
   KPA -> MetricsService
   KPA -> Deployment [style=dashed]
 
+  KPA -> Metric
+  KPA -> Decider
+  
+  MetricsService -> Decider [style=dashed]
+  MetricsService -> Metric [style=dashed]
+
   Route -> ClusterIngress
   Route -> PlaceholderService
   Route -> Certificate

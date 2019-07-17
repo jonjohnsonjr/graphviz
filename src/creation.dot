@@ -10,6 +10,10 @@ digraph CreationGraph {
   KPA -> MetricsService
   KPA -> Deployment [style=dashed]
 
+  // Pseudo-resources
+  KPA -> Metric
+  KPA -> Decider
+
   Route -> ClusterIngress
   Route -> PlaceholderService
   Route -> Certificate
