@@ -64,15 +64,18 @@ digraph DeploymentLifecycle {
     PodScheduled [label=Scheduled, href="https://godoc.org/k8s.io/api/core/v1#PodScheduled"]
     PodInitialized [label=Initialized, href="https://godoc.org/k8s.io/api/core/v1#PodInitialized"]
     ContainersReady [label=ContainersReady, href="https://godoc.org/k8s.io/api/core/v1#ContainersReady"]
+    PodReadinessGates [label=ReadinessGates, href="https://godoc.org/k8s.io/api/core/v1#PodSpec.ReadinessGates"]
 
     // Status
     ContainerStatus [label=ContainerStatus, shape=box, href="https://godoc.org/k8s.io/api/core/v1#ContainerStatus"]
 
     // Dependencies
+    PodReady ->PodReadinessGates
     PodReady -> ContainersReady
     PodReady -> PodInitialized
-    PodInitialized -> PodScheduled
+    PodReady -> PodScheduled
 
+    PodInitialized -> ContainerStatus
     ContainersReady -> ContainerStatus
   }
 
@@ -80,7 +83,8 @@ digraph DeploymentLifecycle {
   CreatePod [label="CreatePod()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L466-L511"]
   DeletePod [label="DeletePod()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L512-L554"]
   ClaimPods [label="ClaimPods()", href="https://github.com/kubernetes/kubernetes/blob/de8fb1c9f81b1bd48a0d25f866492acca2c199f0/pkg/controller/replicaset/replica_set.go#L590-L612"]
-  Probe [label="Probe()", href="https://github.com/kubernetes/kubernetes/blob/619a3985d0d43e0049d795fce223319bd06cbf07/pkg/kubelet/prober/prober.go#L155-L197"]
+  ProbePod [label="Probe()", href="https://github.com/kubernetes/kubernetes/blob/619a3985d0d43e0049d795fce223319bd06cbf07/pkg/kubelet/prober/prober.go#L155-L197"]
+  SchedulePod [label="Schedule()" href="https://github.com/kubernetes/kubernetes/blob/619a3985d0d43e0049d795fce223319bd06cbf07/pkg/scheduler/scheduler.go#L459-L612"]
 
   // Inter-object dependencies
   ReplicaSetReplicas -> ClaimPods
@@ -99,5 +103,7 @@ digraph DeploymentLifecycle {
 
   DeploymentReplicaFailure -> ReplicaSetReplicaFailure
 
-  ContainerStatus -> Probe
+  PodScheduled -> SchedulePod
+
+  ContainerStatus -> ProbePod
 }
