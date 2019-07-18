@@ -1,0 +1,78 @@
+digraph lifecycle {
+  graph [style=filled,color=lightgrey]
+  node [style=filled,color=white];
+
+  EnableScaleToZero [label="EnableScaleToZero", fillcolor=white, color=black, href="https://godoc.org/github.com/knative/serving/pkg/autoscaler#Config.EnableScaleToZero"]
+
+  subgraph cluster_kpa {
+    label = "PodAutoscaler";
+    href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerStatus"
+
+    PodAutoscalerConditionReady [label=Ready, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerConditionReady"]
+    PodAutoscalerConditionActive [label=Active, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerConditionActive"]
+
+    PodAutoscalerConditionReady -> PodAutoscalerConditionActive
+
+    PodAutoscalerMinScale [label=MinScale, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling#MinScaleAnnotationKey"]
+    PodAutoscalerMaxScale [label=MaxScale, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling#MaxScaleAnnotationKey"]
+
+    PodAutoscalerDesiredScale [label=DesiredScale, shape=box]
+    PodAutoscalerDesiredScale -> PodAutoscalerMinScale
+    PodAutoscalerDesiredScale -> PodAutoscalerMaxScale
+  }
+
+  subgraph cluster_decider {
+    label = "Decider";
+    href="https://godoc.org/github.com/knative/serving/pkg/autoscaler#DeciderStatus"
+    style = filled
+    color = linen
+
+    DeciderDesiredScale [label=DesiredScale, href="https://godoc.org/github.com/knative/serving/pkg/autoscaler#DeciderStatus.DesiredScale"]
+    DeciderExcessBurstCapacity [label=ExcessBurstCapacity, href="https://godoc.org/github.com/knative/serving/pkg/autoscaler#DeciderStatus.ExcessBurstCapacity"]
+  }
+
+  subgraph cluster_metric {
+    label = "Metric";
+    href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricStatus"
+    style = filled
+    color = linen
+
+    MetricStableWindow [label=StableWindow, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricStableWindow"]
+    MetricPanicWindow [label=PanicWindow, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricPanicWindow"]
+  }
+
+  subgraph cluster_sks {
+    label = "ServerlessService";
+    href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceStatus"
+
+    ServerlessServiceConditionReady [label=Ready, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceConditionReady"]
+    ServerlessServiceConditionEndspointsPopulated [label=EndpointsPopulated, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceConditionEndspointsPopulated"]
+    ServerlessServiceMode [label=Mode, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceSpec.Mode"]
+
+    ServerlessServiceConditionReady -> ServerlessServiceConditionEndspointsPopulated
+    ServerlessServiceConditionEndspointsPopulated -> ServerlessServiceMode
+  }
+
+  subgraph cluster_endpoints {
+    label = "Endpoints (approximate)";
+    href = "https://godoc.org/k8s.io/api/apps/v1#Endpoints"
+    style = filled
+    color = lightblue
+
+    EndpointsSubsets [label=Subsets, href="https://godoc.org/k8s.io/api/apps/v1#Endpoints.Subsets"]
+  }
+
+  PodAutoscalerConditionActive -> ServerlessServiceConditionReady
+  PodAutoscalerConditionActive -> PodAutoscalerDesiredScale
+  PodAutoscalerConditionActive -> EndpointsSubsets
+
+  PodAutoscalerDesiredScale -> DeciderDesiredScale
+  PodAutoscalerDesiredScale -> EnableScaleToZero
+
+  DeciderDesiredScale -> MetricStableWindow
+  DeciderDesiredScale -> MetricPanicWindow
+
+  ServerlessServiceConditionEndspointsPopulated -> EndpointsSubsets
+  ServerlessServiceMode -> PodAutoscalerConditionActive
+  ServerlessServiceMode -> DeciderExcessBurstCapacity
+}

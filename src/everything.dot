@@ -2,6 +2,8 @@ digraph lifecycle {
   graph [style=filled,color=lightgrey]
   node [style=filled,color=white];
 
+  EnableScaleToZero [label="EnableScaleToZero", fillcolor=white, color=black, href="https://godoc.org/github.com/knative/serving/pkg/autoscaler#Config.EnableScaleToZero"]
+
   subgraph cluster_service {
     label = "Service";
     href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#ServiceStatus"
@@ -71,9 +73,19 @@ digraph lifecycle {
     href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerStatus"
 
     PodAutoscalerConditionReady [label=Ready, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerConditionReady"]
-    PodAutoscalerConditionActive [label=Active, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerConditionActive"]
+    PodAutoscalerConditionActive [label=Active, style="filled,dashed", fillcolor=white, color=black, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerConditionActive"]
+
+    PodAutoscalerMinScale [label=MinScale, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling#MinScaleAnnotationKey"]
+
+    PodAutoscalerMaxScale [label=MaxScale, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling#MaxScaleAnnotationKey"]
+
+    PodAutoscalerDesiredScale [label=DesiredScale]
+
+    PodAutoscalerDesiredScale -> PodAutoscalerMinScale
+    PodAutoscalerDesiredScale -> PodAutoscalerMaxScale
 
     PodAutoscalerConditionReady -> PodAutoscalerConditionActive
+
   }
 
   subgraph cluster_decider {
@@ -106,11 +118,11 @@ digraph lifecycle {
     href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceStatus"
 
     ServerlessServiceConditionReady [label=Ready, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceConditionReady"]
-    ServerlessServiceConditionEndspointsPopulated [label=EndpointsPopulated, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceConditionEndspointsPopulated"]
+    ServerlessServiceConditionEndspointsPopulated [label="EndpointsPopulated (int)", href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceConditionEndspointsPopulated"]
     ServerlessServiceMode [label=Mode, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceSpec.Mode"]
 
     ServerlessServiceConditionReady -> ServerlessServiceConditionEndspointsPopulated
-    ServerlessServiceConditionEndspointsPopulated -> ServerlessServiceMode
+    ServerlessServiceConditionReady -> ServerlessServiceMode
   }
 
   subgraph cluster_pods {
@@ -159,22 +171,27 @@ digraph lifecycle {
 
   ConfigurationConditionReady -> RevisionConditionReady
 
+
   RevisionConditionActive -> PodAutoscalerConditionReady
+
   RevisionConditionContainerHealthy -> ContainerStatus
   RevisionConditionResourcesAvailable -> ContainerStatus
   RevisionConditionResourcesAvailable -> PodScheduled
   RevisionConditionResourcesAvailable -> DeploymentProgressing
 
   PodAutoscalerConditionActive -> ServerlessServiceConditionReady
-  PodAutoscalerConditionActive -> DeciderDesiredScale
-  PodAutoscalerConditionActive -> EndpointsSubsets
+
+  PodAutoscalerDesiredScale -> DeciderDesiredScale
+  PodAutoscalerDesiredScale -> EnableScaleToZero
 
   DeciderDesiredScale -> MetricStableWindow
   DeciderDesiredScale -> MetricPanicWindow
 
   ServerlessServiceConditionEndspointsPopulated -> EndpointsSubsets
-  ServerlessServiceMode -> PodAutoscalerConditionActive
+
   ServerlessServiceMode -> DeciderExcessBurstCapacity
+  ServerlessServiceMode -> PodAutoscalerDesiredScale
 
   DeploymentAvailable -> PodReady
 }
+
