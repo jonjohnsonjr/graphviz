@@ -94,7 +94,7 @@
 </g>
 </g>
 <g id="clust13" class="cluster"><title>cluster_endpoints</title>
-<g id="a_clust13"><a xlink:href="https://godoc.org/k8s.io/api/apps/v1#Endpoints" xlink:title="Endpoints (approximate)">
+<g id="a_clust13"><a xlink:href="https://godoc.org/k8s.io/kubernetes/pkg/apis/core#Endpoints" xlink:title="Endpoints (approximate)">
 <polygon fill="lightblue" stroke="lightblue" points="663,-246 663,-321 857,-321 857,-246 663,-246"/>
 <text text-anchor="middle" x="760" y="-305.8" font-family="Times,serif" font-size="14.00">Endpoints (approximate)</text>
 </a>
@@ -314,15 +314,15 @@
 <!-- PodAutoscalerConditionReady -->
 <g id="node17" class="node"><title>PodAutoscalerConditionReady</title>
 <g id="a_node17"><a xlink:href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerConditionReady" xlink:title="Ready">
-<ellipse fill="white" stroke="white" cx="793" cy="-438" rx="39.7935" ry="18"/>
-<text text-anchor="middle" x="793" y="-434.3" font-family="Times,serif" font-size="14.00">Ready</text>
+<ellipse fill="white" stroke="white" cx="797" cy="-438" rx="39.7935" ry="18"/>
+<text text-anchor="middle" x="797" y="-434.3" font-family="Times,serif" font-size="14.00">Ready</text>
 </a>
 </g>
 </g>
 <!-- RevisionConditionActive&#45;&gt;PodAutoscalerConditionReady -->
 <g id="edge22" class="edge"><title>RevisionConditionActive&#45;&gt;PodAutoscalerConditionReady</title>
-<path fill="none" stroke="black" d="M704.137,-506.072C713.276,-500.376 723.776,-493.586 733,-487 744.479,-478.803 756.711,-469.189 767.116,-460.727"/>
-<polygon fill="black" stroke="black" points="769.513,-463.287 775.019,-454.236 765.07,-457.878 769.513,-463.287"/>
+<path fill="none" stroke="black" d="M703.774,-506.084C712.958,-500.334 723.587,-493.502 733,-487 745.294,-478.508 758.557,-468.677 769.804,-460.132"/>
+<polygon fill="black" stroke="black" points="772.146,-462.747 777.962,-453.891 767.893,-457.187 772.146,-462.747"/>
 </g>
 <!-- IngressConditionNetworkConfigured -->
 <g id="node14" class="node"><title>IngressConditionNetworkConfigured</title>
@@ -353,15 +353,15 @@
 <!-- PodAutoscalerConditionActive -->
 <g id="node18" class="node"><title>PodAutoscalerConditionActive</title>
 <g id="a_node18"><a xlink:href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerConditionActive" xlink:title="Active">
-<ellipse fill="white" stroke="white" cx="802" cy="-355" rx="40.0939" ry="18"/>
-<text text-anchor="middle" x="802" y="-351.3" font-family="Times,serif" font-size="14.00">Active</text>
+<ellipse fill="white" stroke="white" cx="809" cy="-355" rx="40.0939" ry="18"/>
+<text text-anchor="middle" x="809" y="-351.3" font-family="Times,serif" font-size="14.00">Active</text>
 </a>
 </g>
 </g>
 <!-- PodAutoscalerConditionReady&#45;&gt;PodAutoscalerConditionActive -->
 <g id="edge9" class="edge"><title>PodAutoscalerConditionReady&#45;&gt;PodAutoscalerConditionActive</title>
-<path fill="none" stroke="black" d="M794.909,-419.822C796.09,-409.19 797.633,-395.306 798.977,-383.204"/>
-<polygon fill="black" stroke="black" points="802.468,-383.479 800.094,-373.153 795.511,-382.706 802.468,-383.479"/>
+<path fill="none" stroke="black" d="M799.545,-419.822C801.12,-409.19 803.177,-395.306 804.97,-383.204"/>
+<polygon fill="black" stroke="black" points="808.455,-383.558 806.459,-373.153 801.531,-382.532 808.455,-383.558"/>
 </g>
 <!-- DeciderDesiredScale -->
 <g id="node19" class="node"><title>DeciderDesiredScale</title>
@@ -373,8 +373,8 @@
 </g>
 <!-- PodAutoscalerConditionActive&#45;&gt;DeciderDesiredScale -->
 <g id="edge28" class="edge"><title>PodAutoscalerConditionActive&#45;&gt;DeciderDesiredScale</title>
-<path fill="none" stroke="black" d="M762.813,-350.371C725.037,-345.965 671.769,-337.051 659,-321 635.522,-291.488 648.848,-245.772 661.358,-216.889"/>
-<polygon fill="black" stroke="black" points="664.708,-217.978 665.687,-207.429 658.343,-215.066 664.708,-217.978"/>
+<path fill="none" stroke="black" d="M769.751,-350.842C730.055,-346.738 672.658,-337.989 659,-321 635.243,-291.448 648.887,-245.361 661.505,-216.465"/>
+<polygon fill="black" stroke="black" points="664.853,-217.563 665.862,-207.017 658.496,-214.632 664.853,-217.563"/>
 </g>
 <!-- ServerlessServiceConditionReady -->
 <g id="node25" class="node"><title>ServerlessServiceConditionReady</title>
@@ -386,21 +386,21 @@
 </g>
 <!-- PodAutoscalerConditionActive&#45;&gt;ServerlessServiceConditionReady -->
 <g id="edge27" class="edge"><title>PodAutoscalerConditionActive&#45;&gt;ServerlessServiceConditionReady</title>
-<path fill="none" stroke="black" d="M818.516,-371.782C829.811,-381.962 845.493,-394.942 861,-404 874.301,-411.769 889.775,-418.438 903.79,-423.706"/>
-<polygon fill="black" stroke="black" points="902.622,-427.005 913.216,-427.125 905.009,-420.425 902.622,-427.005"/>
+<path fill="none" stroke="black" d="M823.233,-371.903C833.051,-382.134 846.842,-395.126 861,-404 873.82,-412.035 888.92,-418.704 902.756,-423.894"/>
+<polygon fill="black" stroke="black" points="901.962,-427.327 912.556,-427.41 904.326,-420.738 901.962,-427.327"/>
 </g>
 <!-- EndpointsSubsets -->
 <g id="node36" class="node"><title>EndpointsSubsets</title>
-<g id="a_node36"><a xlink:href="https://godoc.org/k8s.io/api/apps/v1#Endpoints.Subsets" xlink:title="Subsets">
-<ellipse fill="white" stroke="white" cx="802" cy="-272" rx="47.3916" ry="18"/>
-<text text-anchor="middle" x="802" y="-268.3" font-family="Times,serif" font-size="14.00">Subsets</text>
+<g id="a_node36"><a xlink:href="https://godoc.org/k8s.io/kubernetes/pkg/apis/core#Endpoints.Subsets" xlink:title="Subsets">
+<polygon fill="white" stroke="white" points="846.5,-290 773.5,-290 773.5,-254 846.5,-254 846.5,-290"/>
+<text text-anchor="middle" x="810" y="-268.3" font-family="Times,serif" font-size="14.00">Subsets</text>
 </a>
 </g>
 </g>
 <!-- PodAutoscalerConditionActive&#45;&gt;EndpointsSubsets -->
 <g id="edge29" class="edge"><title>PodAutoscalerConditionActive&#45;&gt;EndpointsSubsets</title>
-<path fill="none" stroke="black" d="M802,-336.822C802,-326.19 802,-312.306 802,-300.204"/>
-<polygon fill="black" stroke="black" points="805.5,-300.153 802,-290.153 798.5,-300.153 805.5,-300.153"/>
+<path fill="none" stroke="black" d="M809.212,-336.822C809.343,-326.19 809.515,-312.306 809.664,-300.204"/>
+<polygon fill="black" stroke="black" points="813.164,-300.196 809.788,-290.153 806.165,-300.109 813.164,-300.196"/>
 </g>
 <!-- MetricStableWindow -->
 <g id="node23" class="node"><title>MetricStableWindow</title>
@@ -473,30 +473,30 @@
 <!-- ServerlessServiceMode -->
 <g id="node27" class="node"><title>ServerlessServiceMode</title>
 <g id="a_node27"><a xlink:href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceSpec.Mode" xlink:title="Mode">
-<ellipse fill="white" stroke="white" cx="910" cy="-272" rx="37.0935" ry="18"/>
-<text text-anchor="middle" x="910" y="-268.3" font-family="Times,serif" font-size="14.00">Mode</text>
+<polygon fill="white" stroke="white" points="930.5,-290 873.5,-290 873.5,-254 930.5,-254 930.5,-290"/>
+<text text-anchor="middle" x="902" y="-268.3" font-family="Times,serif" font-size="14.00">Mode</text>
 </a>
 </g>
 </g>
 <!-- ServerlessServiceConditionEndspointsPopulated&#45;&gt;ServerlessServiceMode -->
 <g id="edge12" class="edge"><title>ServerlessServiceConditionEndspointsPopulated&#45;&gt;ServerlessServiceMode</title>
-<path fill="none" stroke="black" d="M963.579,-336.822C953.857,-325.241 940.895,-309.801 930.155,-297.009"/>
-<polygon fill="black" stroke="black" points="932.586,-294.46 923.475,-289.051 927.224,-298.961 932.586,-294.46"/>
+<path fill="none" stroke="black" d="M961.882,-336.822C951.202,-325.439 937.022,-310.326 925.142,-297.665"/>
+<polygon fill="black" stroke="black" points="927.489,-295.051 918.094,-290.153 922.384,-299.841 927.489,-295.051"/>
 </g>
 <!-- ServerlessServiceConditionEndspointsPopulated&#45;&gt;EndpointsSubsets -->
 <g id="edge32" class="edge"><title>ServerlessServiceConditionEndspointsPopulated&#45;&gt;EndpointsSubsets</title>
-<path fill="none" stroke="black" d="M913.355,-340.821C895.813,-335.908 877.202,-329.413 861,-321 848.424,-314.47 836.024,-304.98 825.862,-296.159"/>
-<polygon fill="black" stroke="black" points="828.008,-293.382 818.232,-289.298 823.328,-298.587 828.008,-293.382"/>
+<path fill="none" stroke="black" d="M911.113,-341.065C894.116,-336.208 876.337,-329.68 861,-321 850.197,-314.886 839.899,-306.014 831.422,-297.557"/>
+<polygon fill="black" stroke="black" points="833.921,-295.107 824.474,-290.311 828.869,-299.952 833.921,-295.107"/>
 </g>
 <!-- ServerlessServiceMode&#45;&gt;PodAutoscalerConditionActive -->
 <g id="edge33" class="edge"><title>ServerlessServiceMode&#45;&gt;PodAutoscalerConditionActive</title>
-<path fill="none" stroke="black" d="M895.926,-288.799C886.602,-298.735 873.775,-311.438 861,-321 853.627,-326.519 845.231,-331.754 837.131,-336.363"/>
-<polygon fill="black" stroke="black" points="835.261,-333.396 828.183,-341.28 838.632,-339.531 835.261,-333.396"/>
+<path fill="none" stroke="black" d="M889.447,-290.105C881.845,-299.806 871.595,-311.806 861,-321 855.226,-326.01 848.621,-330.796 842.099,-335.092"/>
+<polygon fill="black" stroke="black" points="839.93,-332.322 833.344,-340.621 843.668,-338.241 839.93,-332.322"/>
 </g>
 <!-- ServerlessServiceMode&#45;&gt;DeciderExcessBurstCapacity -->
 <g id="edge34" class="edge"><title>ServerlessServiceMode&#45;&gt;DeciderExcessBurstCapacity</title>
-<path fill="none" stroke="black" d="M895.154,-255.382C884.194,-243.853 869.059,-227.932 856.469,-214.688"/>
-<polygon fill="black" stroke="black" points="858.827,-212.089 849.4,-207.252 853.754,-216.912 858.827,-212.089"/>
+<path fill="none" stroke="black" d="M887.367,-253.822C877.761,-242.546 865.039,-227.611 854.317,-215.024"/>
+<polygon fill="black" stroke="black" points="856.761,-212.496 847.612,-207.153 851.432,-217.035 856.761,-212.496"/>
 </g>
 <!-- PodReady -->
 <g id="node28" class="node"><title>PodReady</title>
