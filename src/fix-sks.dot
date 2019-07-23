@@ -31,8 +31,8 @@ digraph lifecycle {
     style = filled
     color = linen
 
-    DeciderDesiredScale [label=DesiredScale, href="https://godoc.org/github.com/knative/serving/pkg/autoscaler#DeciderStatus.DesiredScale"]
-    DeciderExcessBurstCapacity [label=ExcessBurstCapacity, href="https://godoc.org/github.com/knative/serving/pkg/autoscaler#DeciderStatus.ExcessBurstCapacity"]
+    DeciderDesiredScale [label=DesiredScale, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/autoscaler#DeciderStatus.DesiredScale"]
+    DeciderExcessBurstCapacity [label=ExcessBurstCapacity, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/autoscaler#DeciderStatus.ExcessBurstCapacity"]
   }
 
   subgraph cluster_metric {
@@ -41,8 +41,8 @@ digraph lifecycle {
     style = filled
     color = linen
 
-    MetricStableWindow [label=StableWindow, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricStableWindow"]
-    MetricPanicWindow [label=PanicWindow, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricPanicWindow"]
+    MetricStableWindow [label=StableWindow, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricStableWindow"]
+    MetricPanicWindow [label=PanicWindow, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricPanicWindow"]
   }
 
   subgraph cluster_sks {
@@ -50,7 +50,7 @@ digraph lifecycle {
     href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceStatus"
 
     ServerlessServiceConditionReady [label=Ready, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceConditionReady"]
-    ServerlessServiceConditionEndspointsPopulated [label="Endpoints (int)", href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceConditionEndspointsPopulated"]
+    ServerlessServiceConditionEndspointsPopulated [label="Endpoints", shape=box, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceConditionEndspointsPopulated"]
     ServerlessServiceMode [label=Mode, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceSpec.Mode"]
 
     ServerlessServiceConditionReady -> ServerlessServiceConditionEndspointsPopulated
@@ -59,11 +59,11 @@ digraph lifecycle {
 
   subgraph cluster_endpoints {
     label = "Endpoints (approximate)";
-    href = "https://godoc.org/k8s.io/api/apps/v1#Endpoints"
+    href = "https://godoc.org/k8s.io/kubernetes/pkg/apis/core#Endpoints"
     style = filled
     color = lightblue
 
-    EndpointsSubsets [label=Subsets, href="https://godoc.org/k8s.io/api/apps/v1#Endpoints.Subsets"]
+    EndpointsSubsets [label=Subsets, shape=box, href="https://godoc.org/k8s.io/kubernetes/pkg/apis/core#Endpoints.Subsets"]
   }
 
   PodAutoscalerConditionActive -> ServerlessServiceConditionReady
@@ -79,6 +79,5 @@ digraph lifecycle {
 
   ServerlessServiceMode -> DeciderExcessBurstCapacity
   ServerlessServiceMode -> PodAutoscalerDesiredScale
-  ServerlessServiceMode -> PodAutoscalerMinScale
 }
 

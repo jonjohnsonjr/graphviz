@@ -92,13 +92,8 @@ digraph lifecycle {
     style = filled
     color = linen
 
-    MetricConditionReady [label=Ready, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricConditionReady"]
-    MetricConditionActive [label=Active, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricConditionActive"]
-
     MetricStableWindow [label=StableWindow, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricStableWindow"]
     MetricPanicWindow [label=PanicWindow, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#MetricPanicWindow"]
-
-    MetricConditionReady -> MetricConditionActive
   }
 
   subgraph cluster_sks {
@@ -108,6 +103,7 @@ digraph lifecycle {
     ServerlessServiceConditionReady [label=Ready, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceConditionReady"]
     ServerlessServiceConditionEndspointsPopulated [label=EndpointsPopulated, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceConditionEndspointsPopulated"]
     ServerlessServiceMode [label=Mode, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceSpec.Mode"]
+    ServerlessServiceConditionActivatorEndspointsPopulated [label=ActivatorEndpointsPopulated,style="filled,dashed",fillcolor=white,color=black, href="https://godoc.org/github.com/knative/serving/pkg/apis/networking/v1alpha1#ServerlessServiceConditionActivatorEndspointsPopulated"]
 
     ServerlessServiceConditionReady -> ServerlessServiceConditionEndspointsPopulated
     ServerlessServiceConditionEndspointsPopulated -> ServerlessServiceMode
@@ -173,8 +169,10 @@ digraph lifecycle {
   DeciderDesiredScale -> MetricPanicWindow
 
   ServerlessServiceConditionEndspointsPopulated -> EndpointsSubsets
-  ServerlessServiceMode -> PodAutoscalerConditionActive
+  ServerlessServiceMode -> DeciderDesiredScale
   ServerlessServiceMode -> DeciderExcessBurstCapacity
+
+  ServerlessServiceConditionActivatorEndspointsPopulated -> EndpointsSubsets
 
   DeploymentAvailable -> PodReady
 }

@@ -1,0 +1,24 @@
+digraph generation {
+  RouteUnknownErr [label = "Unknown: err"]
+  MarkRouteNotReconciled  [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#MarkRouteNotReconciled"]
+  PropagateRouteStatus [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#PropagateRouteStatus"]
+
+  ConfigUnknownErr [label = "Unknown: err"]
+  MarkConfigurationNotReconciled  [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#MarkConfigurationNotReconciled"]
+  PropagateConfigurationStatus [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#PropagateConfigurationStatus"]
+
+  reconcile -> route
+  reconcile -> config
+
+  route -> reconcileRoute
+  route -> MarkRouteNotReconciled [label = "Observed != Generation"]
+
+  reconcileRoute -> RouteUnknownErr [label = "err"]
+  reconcileRoute -> PropagateRouteStatus
+
+  config -> reconcileConfig
+  config -> MarkConfigurationNotReconciled [label = "Observed != Generation"]
+
+  reconcileConfig -> ConfigUnknownErr [label = "err"]
+  reconcileConfig -> PropagateConfigurationStatus
+}
