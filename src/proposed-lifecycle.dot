@@ -74,10 +74,13 @@ digraph lifecycle {
     PodAutoscalerConditionSKSReady [label=NetworkConfigured, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerConditionReady"]
     PodAutoscalerConditionPodsReady [label=PodsReady]
 
+    PodAutoscalerMinScale [label=Minscale, shape=box, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling#MinScaleAnnotationKey"]
+
     PodAutoscalerConditionActive [label=Active, style="filled,dashed", fillcolor=white, color=black, href="https://godoc.org/github.com/knative/serving/pkg/apis/autoscaling/v1alpha1#PodAutoscalerConditionActive"]
 
     PodAutoscalerConditionReady -> PodAutoscalerConditionSKSReady
-    PodAutoscalerConditionReady -> PodAutoscalerConditionPodsReady 
+    PodAutoscalerConditionReady -> PodAutoscalerConditionPodsReady
+    PodAutoscalerConditionPodsReady -> PodAutoscalerMinScale
 
   }
 
@@ -201,6 +204,7 @@ digraph lifecycle {
   ServerlessServiceMode -> DeciderDesiredScale
 
   ServerlessServiceConditionActivatorEndspointsPopulated -> EndpointsSubsets
+  PodAutoscalerConditionPodsReady -> EndpointsSubsets
 
   DeploymentAvailable -> PodReady
 
