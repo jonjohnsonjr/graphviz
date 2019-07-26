@@ -1,0 +1,33 @@
+digraph generation {
+  ordering=out;
+
+  // RouteUnknownErr [label = "RoutesReady=Unknown\nReason=err", style=bold]
+  // MarkRouteNotReconciled  [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#MarkRouteNotReconciled"]
+  // PropagateRouteStatus [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#PropagateRouteStatus"]
+
+  // ConfigUnknownErr [label = "ConfigsReady=Unknown\nReason=err", style=bold]
+  // MarkConfigurationNotReconciled  [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#MarkConfigurationNotReconciled"]
+  // PropagateConfigurationStatus [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#PropagateConfigurationStatus"]
+
+  RevisionCreationFailed [href="https://github.com/knative/serving/blob/111ca70cf6c9b6cc5b80e3d1944a64e4fbca7e5f/pkg/apis/serving/v1alpha1/configuration_lifecycle.go#L101"]
+  SetLatestCreatedRevisionName [href="https://github.com/knative/serving/blob/111ca70cf6c9b6cc5b80e3d1944a64e4fbca7e5f/pkg/apis/serving/v1alpha1/configuration_lifecycle.go#L79:32"]
+
+  Reconcile [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf/pkg/reconciler/configuration/configuration.go#L61"]
+  reconcile [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf/pkg/reconciler/configuration/configuration.go#L116"]
+  createRevision [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf///pkg/reconciler/configuration/configuration.go#L267"]
+  updateStatus [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf///pkg/reconciler/configuration/configuration.go#L281"]
+  latestCreatedRevision [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf/pkg/reconciler/configuration/configuration.go#L247"]
+  createRevision [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf/pkg/reconciler/configuration/configuration.go#L267"]
+  updateGeneration [style=bold]
+
+  Reconcile -> updateGeneration
+  Reconcile -> reconcile
+  Reconcile -> updateStatus
+
+  reconcile -> latestCreatedRevision
+  reconcile -> createRevision
+  reconcile -> SetLatestCreatedRevisionName
+
+  latestCreatedRevision -> RevisionCreationFailed [label = "err"]
+  createRevision -> RevisionCreationFailed [label = "err"]
+}

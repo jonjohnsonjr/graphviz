@@ -1,0 +1,23 @@
+digraph generation {
+  ordering=out;
+  rankdir=LR;
+
+  MarkChildNotReconciled
+  PropagateChildStatus
+
+  Reconcile
+  reconcile
+  reconcileChild
+  updateStatus
+  updateGeneration
+
+  Reconcile -> updateGeneration
+  Reconcile -> reconcile
+  Reconcile -> updateStatus
+
+  reconcile -> reconcileChild
+
+  reconcileChild -> MarkChildNotReconciled [label = "Observed != Generation"]
+  reconcileChild -> MarkReconcileError [label = "err"]
+  reconcileChild -> PropagateChildStatus [label = "success"]
+}
