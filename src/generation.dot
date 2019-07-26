@@ -1,11 +1,26 @@
 digraph generation {
-  RouteUnknownErr [label = "Unknown: err"]
+  ordering=out;
+
+  RouteUnknownErr [label = "RoutesReady=Unknown\nReason=err", style=bold]
   MarkRouteNotReconciled  [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#MarkRouteNotReconciled"]
   PropagateRouteStatus [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#PropagateRouteStatus"]
 
-  ConfigUnknownErr [label = "Unknown: err"]
+  ConfigUnknownErr [label = "ConfigsReady=Unknown\nReason=err", style=bold]
   MarkConfigurationNotReconciled  [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#MarkConfigurationNotReconciled"]
   PropagateConfigurationStatus [href="https://godoc.org/github.com/knative/serving/pkg/apis/serving/v1alpha1#PropagateConfigurationStatus"]
+
+  Reconcile [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf/pkg/reconciler/service/service.go#L66"]
+  reconcile [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf/pkg/reconciler/service/service.go#L127"]
+  route [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf/pkg/reconciler/service/service.go#L220"]
+  config [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf/pkg/reconciler/service/service.go#L191"]
+  reconcileRoute [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf/pkg/reconciler/service/service.go#L358"]
+  reconcileConfig [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf/pkg/reconciler/service/service.go#L315"]
+  updateStatus [href="https://github.com/knative/serving/blob/03b04365f0c9f552298436012a911ce3a32cc3bf/pkg/reconciler/service/service.go#L277"]
+  updateGeneration [style=bold]
+
+  Reconcile -> updateGeneration
+  Reconcile -> reconcile
+  Reconcile -> updateStatus
 
   reconcile -> route
   reconcile -> config
